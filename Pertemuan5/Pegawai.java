@@ -1,4 +1,4 @@
-package Pertemuan5;
+package pertemuan5;
 
 public class Pegawai {
     private String nip;

@@ -1,4 +1,4 @@
-package Pertemuan5.Tugas;
+package pertemuan5.Tugas;
 
 public class Traveler {
     private String id;

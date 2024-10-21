@@ -1,4 +1,4 @@
-package Pertemuan5.Tugas;
+package pertemuan5.Tugas;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
