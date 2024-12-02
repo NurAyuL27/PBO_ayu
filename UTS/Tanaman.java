@@ -1,123 +1,79 @@
 package UTS;
 
 import java.util.Random;
-
-public abstract class Tanaman {
+class Tanaman {
     protected String nama;
-    protected int waktuPanen;
+    protected int hariHinggaPanen;
     protected int kebutuhanAir;
     protected int kebutuhanPupuk;
-    protected boolean sakit;
-    protected boolean mati;
-    protected int waktuMenyiram;
-    protected int waktuPupuk;
-    protected int harga;
-    protected int banyaknyaMenanam;
-    protected boolean sudahPanen;
-    protected int umur;
+    protected boolean sudahDipanen;
+    protected boolean terkenaHama;
+    protected int jumlahPupuk;
 
-    public Tanaman(String nama, int harga) {
+    public Tanaman(String nama, int hariHinggaPanen, int kebutuhanAir, int kebutuhanPupuk) {
         this.nama = nama;
-        this.harga = harga;
-        this.sakit = false;
-        this.mati = false;
-        this.waktuMenyiram = setWaktuMenyiramOtomatis();
-        this.waktuPupuk = setWaktuMemupukOtomatis();
-        this.waktuPanen = setWaktuPanenOtomatis();
-        this.banyaknyaMenanam = 0;
-        this.sudahPanen = false;
+        this.hariHinggaPanen = hariHinggaPanen;
+        this.kebutuhanAir = kebutuhanAir;
+        this.kebutuhanPupuk = kebutuhanPupuk;
+        this.sudahDipanen = false;
+        this.terkenaHama = false;
+        this.jumlahPupuk = 0;
     }
 
-    // Method untuk mengatur waktu menyiram secara otomatis
-    private int setWaktuMenyiramOtomatis() {
-        Random random = new Random();
-        return random.nextInt(2) + 1; // Menghasilkan angka antara 1 hingga 4 hari untuk menyiram
-    }
-
-    private int setWaktuMemupukOtomatis() {
-        Random random = new Random();
-        return random.nextInt(2) + 1; // Menghasilkan angka antara 1 hingga 4 hari untuk menyiram
-    }
-
-    // Method untuk mengatur waktu panen secara otomatis
-    private int setWaktuPanenOtomatis() {
-        Random random = new Random();
-        return random.nextInt(30) + 40; // Menghasilkan waktu panen antara 90 hingga 120 hari
+    public boolean siapPanen() {
+        return hariHinggaPanen <= 0 && jumlahPupuk >= kebutuhanPupuk;
     }
 
     public void tumbuh() {
-        if (!mati) {
-            if (umur >= waktuPanen && !sakit) {
-                sudahPanen = true;
-            } else if (kebutuhanAir > 0 && waktuMenyiram >= kebutuhanAir) {
-                // Tanaman kekurangan air
-                // ...
-            } else if (kebutuhanPupuk > 0 && waktuPupuk >= kebutuhanPupuk) {
-                // Tanaman kekurangan pupuk
-                // ...
-            }
-        }
+        hariHinggaPanen--;
     }
 
-    public abstract void panen();
-
-    public void terkenaHama() {
-        sakit = true;
-        System.out.println(nama + " terkena hama!");
-    }
-
-    public void sembuh() {
-        sakit = false;
-        System.out.println(nama + " sembuh dari hama.");
-    }
-
-    public void siram() {
-        if (mati) {
-            System.out.println(nama + " sudah mati, tidak bisa disiram.");
+    public void panen(Pemain pemain) {
+        if (siapPanen()) {
+            sudahDipanen = true;
+            System.out.println(nama + " sudah dipanen.");
         } else {
-            Random random = new Random();
-            waktuMenyiram++;
-            if (random.nextInt(100) < 10) { // 10% kemungkinan terkena hama saat disiram
-                terkenaHama();
-            }
-            System.out.println(nama + " disiram.");
+            System.out.println(nama + " belum siap dipanen. Pastikan sudah disiram dan dipupuk.");
         }
     }
 
-    public void pupuk() {
-        if (mati) {
-            System.out.println(nama + " sudah mati, tidak bisa dipupuk.");
+    public void tampilkanStatus() {
+        System.out.println(nama + ": " + (siapPanen() ? "Siap Panen" : "Belum Siap Panen, Sisa hari: " + hariHinggaPanen + ", Kebutuhan Pupuk: " + (kebutuhanPupuk - jumlahPupuk)));
+    }
+
+    public void tampilkanStatusHama() {
+        if (terkenaHama) {
+            System.out.println(nama + " terkena hama!");
         } else {
-            Random random = new Random();
-            if (random.nextInt(100) < 5) { // 5% kemungkinan tanaman mati
-                mati = true;
-                System.out.println(nama + " mati setelah diberi pupuk.");
-            } else {
-                System.out.println(nama + " diberi pupuk.");
-            }
+            System.out.println(nama + " bebas dari hama.");
         }
     }
 
-    public void statusTanaman() {
-        if (mati) {
-            System.out.println(nama + " sudah mati.");
-        } else if (sakit) {
-            System.out.println(nama + " sedang sakit.");
-        } else {
-            System.out.println(nama + " dalam kondisi sehat.");
-        }
+    public boolean isSudahDipanen() {
+        return sudahDipanen;
     }
 
-        // Di kelas Tanaman
-    public void cekCuaca(Cuaca cuaca) {
-        if (cuaca.getKondisi().equalsIgnoreCase("hujan")) {
-            if (new Random().nextInt(100) < 20) {  // 20% kemungkinan hama saat hujan
-                terkenaHama();
-            }
-        } else if (cuaca.getKondisi().equalsIgnoreCase("kemarau")) {
-            if (new Random().nextInt(100) < 15) {  // 15% kemungkinan hama saat kemarau
-                terkenaHama();
-            }
-        }
+    public int getHariHinggaPanen() {
+        return hariHinggaPanen;
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public void serangHama() {
+        terkenaHama = true;
+    }
+
+    public void hilangkanHama() {
+        terkenaHama = false;
+    }
+
+    public void tambahPupuk() {
+        jumlahPupuk++;
+    }
+
+    public int getKebutuhanPupuk() {
+        return kebutuhanPupuk;
     }
 }

@@ -3,38 +3,31 @@ package UTS;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Toko {
-    private List<Tanaman> inventoriTanaman; // Mengubah tipe dari String ke Tanaman
+class Toko {
+    private int hargaPadi;
+    private int hargaJagung;
+    private int hargaKentang;
 
     public Toko() {
-        this.inventoriTanaman = new ArrayList<>();
+        hargaPadi = 10000;   // Harga jual Padi
+        hargaJagung = 12000; // Harga jual Jagung
+        hargaKentang = 8000; // Harga jual Kentang
     }
 
-    // Method untuk membeli tanaman dari toko
-    public void beliTanaman(Tanaman tanaman) {
-        inventoriTanaman.add(tanaman); // Menambahkan objek Tanaman ke dalam inventori
-        System.out.println("Membeli tanaman " + tanaman.nama + " dari toko.");
-    }
-
-    // Method untuk menjual tanaman ke toko
-    public void jualTanaman(Tanaman tanaman) {
-        if (inventoriTanaman.contains(tanaman)) { // Mengecek apakah tanaman ada dalam inventori
-            inventoriTanaman.remove(tanaman);
-            System.out.println("Menjual tanaman " + tanaman.nama + " ke toko.");
-        } else {
-            System.out.println(tanaman.nama + " tidak ada di inventori tanaman.");
-        }
-    }
-
-    // Method untuk melihat inventori tanaman di toko
-    public void lihatInventori() {
-        if (inventoriTanaman.isEmpty()) {
-            System.out.println("Inventori kosong.");
-        } else {
-            System.out.println("Inventori tanaman di toko:");
-            for (Tanaman tanaman : inventoriTanaman) {
-                System.out.println("- " + tanaman.nama);
+    public void jualHasilPanen(Tanaman tanaman, Pemain pemain) {
+        if (tanaman.isSudahDipanen()) {
+            int harga = 0;
+            if (tanaman instanceof Padi) {
+                harga = hargaPadi;
+            } else if (tanaman instanceof Jagung) {
+                harga = hargaJagung;
+            } else if (tanaman instanceof Kentang) {
+                harga = hargaKentang;
             }
+            pemain.tambahUang(harga);
+            System.out.println("Anda telah menjual " + tanaman.getNama() + " seharga " + harga + ". Uang Anda sekarang: " + pemain.getUang());
+        } else {
+            System.out.println("Tanaman belum dipanen, tidak dapat dijual.");
         }
     }
 }
